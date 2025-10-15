@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { debugLogger, debugApiCall, debugConfigValidation } from '@/utils/debugHelper'
 import type {
     Recipe,
     CuisineType,
@@ -37,8 +38,17 @@ const createAiClient = () => {
  */
 export const generateRecipe = async (ingredients: string[], cuisine: CuisineType, customPrompt?: string): Promise<Recipe> => {
     try {
+        debugLogger.info('api', `开始生成${cuisine.name}菜谱`, { ingredients, cuisine: cuisine.name })
+        
         const aiClient = createAiClient()
         const apiConfig = getTextGenerationConfig()
+        
+        // 验证配置
+        const configValidation = debugConfigValidation(apiConfig, 'text')
+        if (!configValidation.hasBaseUrl || !configValidation.hasApiKey || !configValidation.hasModel) {
+            debugLogger.error('config', '文本生成配置不完整', configValidation)
+            throw new Error('API配置不完整，请检查设置')
+        }
 
         // 构建提示词
         let prompt = `${cuisine.prompt}

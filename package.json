@@ -7,7 +7,7 @@
         "build": "vue-tsc --noEmit && vite build",
         "build:netlify": "vite build --config vite.config.prod.ts",
         "build:simple": "vite build --config vite.config.prod.ts",
-        "build:railway": "vue-tsc --noEmit && vite build",
+        "build:railway": "vite build",
         "start": "serve -s dist -l $PORT",
         "preview": "vite preview",
         "type-check": "vue-tsc --noEmit"

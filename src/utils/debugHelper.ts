@@ -119,17 +119,46 @@ export const debugApiCall = async (apiName: string, config: any, requestData: an
     }
 }
 
+// 运行时环境变量检测（用于Railway等部署平台）
+export const debugRuntimeEnvironment = () => {
+    // 尝试从window对象获取运行时环境变量（如果存在）
+    const runtimeEnv = (window as any).__RUNTIME_ENV__ || {}
+    
+    const envVars = {
+        VITE_TEXT_GENERATION_BASE_URL: import.meta.env.VITE_TEXT_GENERATION_BASE_URL || runtimeEnv.VITE_TEXT_GENERATION_BASE_URL || '未设置',
+        VITE_TEXT_GENERATION_API_KEY: import.meta.env.VITE_TEXT_GENERATION_API_KEY || runtimeEnv.VITE_TEXT_GENERATION_API_KEY ? '***已设置***' : '未设置',
+        VITE_TEXT_GENERATION_MODEL: import.meta.env.VITE_TEXT_GENERATION_MODEL || runtimeEnv.VITE_TEXT_GENERATION_MODEL || '未设置',
+        VITE_TEXT_GENERATION_TEMPERATURE: import.meta.env.VITE_TEXT_GENERATION_TEMPERATURE || runtimeEnv.VITE_TEXT_GENERATION_TEMPERATURE || '未设置',
+        VITE_TEXT_GENERATION_TIMEOUT: import.meta.env.VITE_TEXT_GENERATION_TIMEOUT || runtimeEnv.VITE_TEXT_GENERATION_TIMEOUT || '未设置',
+        VITE_IMAGE_GENERATION_BASE_URL: import.meta.env.VITE_IMAGE_GENERATION_BASE_URL || runtimeEnv.VITE_IMAGE_GENERATION_BASE_URL || '未设置',
+        VITE_IMAGE_GENERATION_API_KEY: import.meta.env.VITE_IMAGE_GENERATION_API_KEY || runtimeEnv.VITE_IMAGE_GENERATION_API_KEY ? '***已设置***' : '未设置',
+        VITE_IMAGE_GENERATION_MODEL: import.meta.env.VITE_IMAGE_GENERATION_MODEL || runtimeEnv.VITE_IMAGE_GENERATION_MODEL || '未设置',
+        NODE_ENV: import.meta.env.NODE_ENV || '未设置',
+        MODE: import.meta.env.MODE || '未设置',
+        // 添加Railway特定信息
+        RAILWAY_ENVIRONMENT: runtimeEnv.RAILWAY_ENVIRONMENT || '未设置',
+        RAILWAY_PUBLIC_DOMAIN: runtimeEnv.RAILWAY_PUBLIC_DOMAIN || '未设置'
+    }
+
+    debugLogger.info('config', '运行时环境变量检查', envVars)
+    return envVars
+}
+
 // 环境变量调试
 export const debugEnvironment = () => {
+    // 在Vite中，环境变量在构建时就被替换了
+    // 如果环境变量未在构建时设置，import.meta.env会返回undefined
     const envVars = {
-        VITE_TEXT_GENERATION_BASE_URL: import.meta.env.VITE_TEXT_GENERATION_BASE_URL,
+        VITE_TEXT_GENERATION_BASE_URL: import.meta.env.VITE_TEXT_GENERATION_BASE_URL || '未设置',
         VITE_TEXT_GENERATION_API_KEY: import.meta.env.VITE_TEXT_GENERATION_API_KEY ? '***已设置***' : '未设置',
-        VITE_TEXT_GENERATION_MODEL: import.meta.env.VITE_TEXT_GENERATION_MODEL,
-        VITE_IMAGE_GENERATION_BASE_URL: import.meta.env.VITE_IMAGE_GENERATION_BASE_URL,
+        VITE_TEXT_GENERATION_MODEL: import.meta.env.VITE_TEXT_GENERATION_MODEL || '未设置',
+        VITE_TEXT_GENERATION_TEMPERATURE: import.meta.env.VITE_TEXT_GENERATION_TEMPERATURE || '未设置',
+        VITE_TEXT_GENERATION_TIMEOUT: import.meta.env.VITE_TEXT_GENERATION_TIMEOUT || '未设置',
+        VITE_IMAGE_GENERATION_BASE_URL: import.meta.env.VITE_IMAGE_GENERATION_BASE_URL || '未设置',
         VITE_IMAGE_GENERATION_API_KEY: import.meta.env.VITE_IMAGE_GENERATION_API_KEY ? '***已设置***' : '未设置',
-        VITE_IMAGE_GENERATION_MODEL: import.meta.env.VITE_IMAGE_GENERATION_MODEL,
-        NODE_ENV: import.meta.env.NODE_ENV,
-        MODE: import.meta.env.MODE
+        VITE_IMAGE_GENERATION_MODEL: import.meta.env.VITE_IMAGE_GENERATION_MODEL || '未设置',
+        NODE_ENV: import.meta.env.NODE_ENV || '未设置',
+        MODE: import.meta.env.MODE || '未设置'
     }
 
     debugLogger.info('config', '环境变量检查', envVars)

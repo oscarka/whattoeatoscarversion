@@ -76,7 +76,7 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
-import { debugLogger, debugEnvironment, debugConfigValidation } from '@/utils/debugHelper'
+import { debugLogger, debugRuntimeEnvironment, debugConfigValidation } from '@/utils/debugHelper'
 import { useSettingsStore } from '@/stores/settings'
 import { generateRecipe } from '@/services/aiService'
 import { generateRecipeImage } from '@/services/imageService'
@@ -197,8 +197,8 @@ const testImageAPI = async () => {
 }
 
 onMounted(() => {
-    // 初始化环境变量检查
-    envVars.value = debugEnvironment()
+    // 初始化环境变量检查（使用运行时检测）
+    envVars.value = debugRuntimeEnvironment()
     
     // 初始化日志
     refreshLogs()
